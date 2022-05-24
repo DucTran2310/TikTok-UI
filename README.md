@@ -4,3 +4,5 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 Customize-cra để tùy chỉnh cấu hình Webpack
 Babel plugin module resolver để sửa các đường dẫn tuyệt đối
+
+Tippyjs: dùng để hiển thị dropdown
