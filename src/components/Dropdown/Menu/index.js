@@ -41,6 +41,7 @@ function Menu({ children, items = [], onChange }) {
         <Tippy
             interactive
             delay={[0, 700]}
+            offset={[12, 8]}
             placement="bottom-end"
             render={(attrs) => (
                 <div className={cx('menu-list')} tabIndex="-1" {...attrs}>
@@ -57,6 +58,8 @@ function Menu({ children, items = [], onChange }) {
                     </DropdownWrapper>
                 </div>
             )}
+            // khi đang ở menu c2 bỏ chuột ra, rê vào lại sẽ trở lại menu c1
+            onHide={() => setHistory((prev) => prev.slice(0, 1))}
         >
             {children}
         </Tippy>
