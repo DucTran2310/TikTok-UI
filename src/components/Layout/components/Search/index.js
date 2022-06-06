@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import AccountItem from '~/components/AccountItem';
 import { Wrapper as DropdownWrapper } from '~/components/Dropdown';
 import { SearchIcon } from '~/components/Icons';
+import { useDebounce } from '~/hooks';
 import styles from './Search.module.scss';
 
 const cx = classNames.bind(styles);
@@ -18,9 +19,11 @@ function Search() {
 
     const inputRef = useRef();
 
+    const debounced = useDebounce(searchValue, 500);
+
     useEffect(() => {
         // Không có giá trị search thì ko hiện
-        if (!searchValue.trim()) {
+        if (!debounced.trim()) {
             // Khi xóa hết ký tự thì ko hiện account nào nữa
             setSearchResult([]);
             return;
@@ -29,7 +32,7 @@ function Search() {
         setLoading(true);
 
         // Khi user truyền các ký tự gây đụng chạm với URL, nó sẽ mã hóa thành những ký tự hợp lệ trên URL
-        fetch(`https://tiktok.fullstack.edu.vn/api/users/search?q=${encodeURIComponent(searchValue)}&type=less`)
+        fetch(`https://tiktok.fullstack.edu.vn/api/users/search?q=${encodeURIComponent(debounced)}&type=less`)
             .then((res) => res.json())
             .then((res) => {
                 setSearchResult(res.data);
@@ -38,7 +41,7 @@ function Search() {
             .catch(() => {
                 setLoading(false);
             });
-    }, [searchValue]);
+    }, [debounced]);
 
     const handleClear = () => {
         setSearchValue('');
