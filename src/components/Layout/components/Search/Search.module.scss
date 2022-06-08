@@ -21,6 +21,7 @@
         outline: none;
         background-color: transparent;
         caret-color: var(--primary);
+        font-family: var(--font-family);
     }
 
     // Khi không có placeholder thì active cái btn search lên
