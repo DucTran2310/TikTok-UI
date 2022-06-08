@@ -8,7 +8,7 @@ import MenuItem from './MenuItem';
 
 const cx = classNames.bind(styles);
 
-function Menu({ children, items = [], onChange }) {
+function Menu({ children, hideOnClick = false, items = [], onChange }) {
     // Object trong mảng
     const [history, setHistory] = useState([{ data: items }]);
 
@@ -43,6 +43,8 @@ function Menu({ children, items = [], onChange }) {
             delay={[0, 700]}
             offset={[12, 8]}
             placement="bottom-end"
+            // Bấm vào logo ko ẩn menu
+            hideOnClick={hideOnClick}
             render={(attrs) => (
                 <div className={cx('menu-list')} tabIndex="-1" {...attrs}>
                     <DropdownWrapper className={cx('menu-dropdown')}>
@@ -54,7 +56,7 @@ function Menu({ children, items = [], onChange }) {
                                 }}
                             />
                         )}
-                        {renderItems()}
+                        <div className={cx('menu-scroll')}>{renderItems()}</div>
                     </DropdownWrapper>
                 </div>
             )}
