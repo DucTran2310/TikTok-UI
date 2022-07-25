@@ -1,14 +1,18 @@
-import Tippy from '@tippyjs/react/headless';
+import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { useState } from 'react';
-import { Wrapper as DropdownWrapper } from '~/components/Dropdown';
+import Tippy from '@tippyjs/react/headless';
+
+import { Wrapper as PopperWrapper } from '~/components/Dropdown';
+import MenuItem from './MenuItem';
 import Header from './Header';
 import styles from './Menu.module.scss';
-import MenuItem from './MenuItem';
+import { useState } from 'react';
 
 const cx = classNames.bind(styles);
 
-function Menu({ children, hideOnClick = false, items = [], onChange }) {
+const defaultFn = () => {};
+
+function Menu({ children, items = [], hideOnClick = false, onChange = defaultFn }) {
     // Object trong mảng
     const [history, setHistory] = useState([{ data: items }]);
 
@@ -24,7 +28,7 @@ function Menu({ children, hideOnClick = false, items = [], onChange }) {
                 <MenuItem
                     key={index}
                     data={item}
-                    onCLick={() => {
+                    onClick={() => {
                         if (isParent) {
                             // push vào cuối mảng array mới
                             setHistory((prev) => [...prev, item.children]);
@@ -37,35 +41,44 @@ function Menu({ children, hideOnClick = false, items = [], onChange }) {
         });
     };
 
+    const handleBack = () => {
+        setHistory((prev) => prev.slice(0, prev.length - 1));
+    };
+
+    const renderResult = (attrs) => (
+        <div className={cx('menu-list')} tabIndex="-1" {...attrs}>
+            <PopperWrapper className={cx('menu-popper')}>
+                {history.length > 1 && <Header title={current.title} onBack={handleBack} />}
+                <div className={cx('menu-body')}>{renderItems()}</div>
+            </PopperWrapper>
+        </div>
+    );
+
+    // Reset to first page
+    const handleReset = () => {
+        setHistory((prev) => prev.slice(0, 1));
+    };
+
     return (
         <Tippy
             interactive
             delay={[0, 700]}
             offset={[12, 8]}
-            placement="bottom-end"
-            // Bấm vào logo ko ẩn menu
             hideOnClick={hideOnClick}
-            render={(attrs) => (
-                <div className={cx('menu-list')} tabIndex="-1" {...attrs}>
-                    <DropdownWrapper className={cx('menu-dropdown')}>
-                        {history.length > 1 && (
-                            <Header
-                                title="Language"
-                                onBack={() => {
-                                    setHistory((prev) => prev.slice(0, prev.length - 1));
-                                }}
-                            />
-                        )}
-                        <div className={cx('menu-scroll')}>{renderItems()}</div>
-                    </DropdownWrapper>
-                </div>
-            )}
-            // khi đang ở menu c2 bỏ chuột ra, rê vào lại sẽ trở lại menu c1
-            onHide={() => setHistory((prev) => prev.slice(0, 1))}
+            placement="bottom-end"
+            render={renderResult}
+            onHide={handleReset}
         >
             {children}
         </Tippy>
     );
 }
+
+Menu.propTypes = {
+    children: PropTypes.node.isRequired,
+    items: PropTypes.array,
+    hideOnClick: PropTypes.bool,
+    onChange: PropTypes.func,
+};
 
 export default Menu;

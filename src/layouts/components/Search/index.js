@@ -18,6 +18,7 @@ function Search() {
     const [searchResult, setSearchResult] = useState([]);
     const [showResult, setShowResult] = useState(true);
     const [loading, setLoading] = useState(false);
+    console.log('Search Result', searchResult);
 
     const inputRef = useRef();
 

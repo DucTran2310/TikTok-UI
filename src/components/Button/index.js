@@ -1,5 +1,6 @@
 import classNames from 'classnames/bind';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import styles from './Button.module.scss';
 
 const cx = classNames.bind(styles);
@@ -66,5 +67,24 @@ function Button({
         </Comp>
     );
 }
+
+Button.propTypes = {
+    // PropTypes.node sẽ nhận những kiểu gì có thể render ra được number, string, element or an array
+    // isRequired là bắt buộc phải cos
+    to: PropTypes.string,
+    href: PropTypes.string,
+    primary: PropTypes.bool,
+    outline: PropTypes.bool,
+    text: PropTypes.bool,
+    rounded: PropTypes.bool,
+    disabled: PropTypes.bool,
+    small: PropTypes.bool,
+    large: PropTypes.bool,
+    children: PropTypes.node.isRequired,
+    className: PropTypes.string,
+    leftIcon: PropTypes.node,
+    rightIcon: PropTypes.node,
+    onClick: PropTypes.func,
+};
 
 export default Button;
