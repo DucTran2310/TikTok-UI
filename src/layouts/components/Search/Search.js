@@ -16,17 +16,16 @@ const cx = classNames.bind(styles);
 function Search() {
     const [searchValue, setSearchValue] = useState('');
     const [searchResult, setSearchResult] = useState([]);
-    const [showResult, setShowResult] = useState(true);
+    const [showResult, setShowResult] = useState(false);
     const [loading, setLoading] = useState(false);
-    console.log('Search Result', searchResult);
 
     const inputRef = useRef();
 
-    const debounced = useDebounce(searchValue, 500);
+    const debouncedValue = useDebounce(searchValue, 500);
 
     useEffect(() => {
         // Không có giá trị search thì ko hiện
-        if (!debounced.trim()) {
+        if (!debouncedValue.trim()) {
             // Khi xóa hết ký tự thì ko hiện account nào nữa
             setSearchResult([]);
             return;
@@ -35,14 +34,14 @@ function Search() {
         const fetchApi = async () => {
             setLoading(true);
 
-            const result = await searchServices.search(debounced);
+            const result = await searchServices.search(debouncedValue);
             setSearchResult(result);
 
             setLoading(false);
         };
 
         fetchApi();
-    }, [debounced]);
+    }, [debouncedValue]);
 
     const handleClear = () => {
         setSearchValue('');
@@ -89,9 +88,7 @@ function Search() {
                         placeholder="Search accounts and videos"
                         spellCheck="false"
                         onChange={handleChange}
-                        onFocus={() => {
-                            setShowResult(true);
-                        }}
+                        onFocus={() => setShowResult(true)}
                     />
 
                     {/* Clear */}
